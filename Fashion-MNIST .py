@@ -1,18 +1,4 @@
 #!/usr/bin/env python
-# coding: utf-8
-
-# # Classifying Fashion-MNIST
-# 
-# Now it's your turn to build and train a neural network. You'll be using the [Fashion-MNIST dataset](https://github.com/zalandoresearch/fashion-mnist), a drop-in replacement for the MNIST dataset. MNIST is actually quite trivial with neural networks where you can easily achieve better than 97% accuracy. Fashion-MNIST is a set of 28x28 greyscale images of clothes. It's more complex than MNIST, so it's a better representation of the actual performance of your network, and a better representation of datasets you'll use in the real world.
-# 
-# <img src='assets/fashion-mnist-sprite.png' width=500px>
-# 
-# In this notebook, you'll build your own neural network. For the most part, you could just copy and paste the code from Part 3, but you wouldn't be learning. It's important for you to write the code yourself and get it to work. Feel free to consult the previous notebooks though as you work through this.
-# 
-# First off, let's load the dataset through torchvision.
-
-# In[1]:
-
 
 import torch
 from torchvision import datasets, transforms
@@ -30,23 +16,11 @@ testset = datasets.FashionMNIST('~/.pytorch/F_MNIST_data/', download=True, train
 testloader = torch.utils.data.DataLoader(testset, batch_size=64, shuffle=True)
 
 
-# Here we can see one of the images.
-
-# In[2]:
-
-
 image, label = next(iter(trainloader))
 helper.imshow(image[0,:]);
 
 
-# ## Building the network
-# 
-# Here you should define your network. As with MNIST, each image is 28x28 which is a total of 784 pixels, and there are 10 classes. You should include at least one hidden layer. We suggest you use ReLU activations for the layers and to return the logits or log-softmax from the forward pass. It's up to you how many layers you add and the size of those layers.
-
-# In[3]:
-
-
-# TODO: Define your network architecture here
+# Defining network architecture 
 from torch import nn
 
 model = nn.Sequential(nn.Linear(784,342),
@@ -60,33 +34,14 @@ model = nn.Sequential(nn.Linear(784,342),
                      )
 
 
-# # Train the network
-# 
-# Now you should create your network and train it. First you'll want to define [the criterion](http://pytorch.org/docs/master/nn.html#loss-functions) ( something like `nn.CrossEntropyLoss`) and [the optimizer](http://pytorch.org/docs/master/optim.html) (typically `optim.SGD` or `optim.Adam`).
-# 
-# Then write the training code. Remember the training pass is a fairly straightforward process:
-# 
-# * Make a forward pass through the network to get the logits 
-# * Use the logits to calculate the loss
-# * Perform a backward pass through the network with `loss.backward()` to calculate the gradients
-# * Take a step with the optimizer to update the weights
-# 
-# By adjusting the hyperparameters (hidden units, learning rate, etc), you should be able to get the training loss below 0.4.
-
-# In[7]:
-
-
-# TODO: Create the network, define the criterion and optimizer
+#Creating the network, defining the criterion and optimizer
 from torch import optim
 
 criterion = nn.NLLLoss()
 optimizer = optim.Adam(model.parameters(),lr=.003)
 
 
-# In[8]:
-
-
-# TODO: Train the network here
+#Training the network 
 epochs = 5
 for e in range(epochs):
     running_loss = 0
@@ -105,10 +60,9 @@ for e in range(epochs):
         optimizer.step()
         
         running_loss+=loss.item()
-    else: print('Training loss',running_loss)
+    else: 
+        print('Training loss',running_loss)
 
-
-# In[12]:
 
 
 get_ipython().run_line_magic('matplotlib', 'inline')
@@ -116,7 +70,7 @@ get_ipython().run_line_magic('config', "InlineBackend.figure_format = 'retina'")
 
 import helper
 import torch.nn.functional as F
-# Test out your network!
+# Testing the network
 
 dataiter = iter(testloader)
 images, labels = dataiter.next()
@@ -125,15 +79,9 @@ img = images[0]
 img = img.resize_(1, 784)
 
 logits = model.forward(img)
-# TODO: Calculate the class probabilities (softmax) for img
+# Calculate the class probabilities (softmax) for img
 ps = F.softmax(logits,dim=1)
 
 # Plot the image and probabilities
 helper.view_classify(img.resize_(1, 28, 28), ps, version='Fashion')
-
-
-# In[ ]:
-
-
-
 
